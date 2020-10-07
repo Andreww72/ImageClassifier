@@ -7,7 +7,7 @@ function [training_data] = load_images(base_dir)
     
     for level = levels
         for location = locations
-           search_directory = base_dir + level + "/" + location + "/";
+           search_directory = base_dir + level + filesep + location + "/";
            dir_info = dir(search_directory + "*.png");
            file_names = string({dir_info.name});
            directory_path = string({dir_info.folder});
