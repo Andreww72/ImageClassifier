@@ -1,43 +1,58 @@
+%% Setup
 image_directory = "../EGH444_Project_2020_TrainingData/";
-%[training_data] = load_images(image_directory);
-%load('training_data.mat') % Just load the data without computation
 
-imds = imageDatastore(image_directory, ...
-    'IncludeSubfolders',true, ...
-    'LabelSource','foldernames');
-imds.ReadSize = numpartitions(imds);
-imds.ReadFcn = @(loc)centerCropWindow2d(imread(loc),[300,300]);
+%% Transfer learning
+net = alexnet; % Get Alexnet
+inputSize = net.Layers(1).InputSize;
+layersTransfer = net.Layers(1:end-3); % Use all trained layers except last 3
 
-numTrainFiles = 40;
-[imdsTrain,imdsValidation] = splitEachLabel(imds,numTrainFiles,'randomize');
-inputSize = [300,300,3];
-numClasses = 2;
+% Setup latyers
+numClasses = numel(categories(imdsTrain.Labels));
 layers = [
-    imageInputLayer(inputSize)
-    convolution2dLayer(5,20)
-    batchNormalizationLayer
-    reluLayer
-    maxPooling2dLayer(2,'Stride',2)
-    convolution2dLayer(5,20)
-    batchNormalizationLayer
-    reluLayer
-    maxPooling2dLayer(2,'Stride',2)
-    fullyConnectedLayer(numClasses)
+    layersTransfer % Transfer learning
+    fullyConnectedLayer(numClasses,'WeightLearnRateFactor',20,'BiasLearnRateFactor',20)
     softmaxLayer
     classificationLayer];
 
+%% Develop the model
+imds = imageDatastore(image_directory, ...
+    'IncludeSubfolders',true, ...
+    'LabelSource','foldernames');
+
+% Split into training and validation 70-30
+[imdsTrain,imdsValidation] = splitEachLabel(imds,0.7,'randomized');
+
+% The Alexnet (pretrained) requires input images of size 227-by-227-by-3
+% Consequently, we have to resize to these deminisions. 
+% Additionally, apply data augmentation ot randomly flip the training 
+% images along the vertical axis, and randomly translate them up to 30 
+% pixels horizontally and vertically.
+pixelRange = [-30 30];
+imageAugmenter = imageDataAugmenter( ...
+    'RandXReflection',true, ...
+    'RandXTranslation',pixelRange, ...
+    'RandYTranslation',pixelRange);
+augimdsTrain = augmentedImageDatastore(inputSize(1:2),imdsTrain, ...
+    'DataAugmentation',imageAugmenter);
+
+% Automatically resize the validation images without performing further data
+% augmentation 
+augimdsValidation = augmentedImageDatastore(inputSize(1:2),imdsValidation);
+
 options = trainingOptions('sgdm', ...
-    'MaxEpochs',4, ...
-    'ValidationData',imdsValidation, ...
-    'ValidationFrequency',30, ...
+    'MiniBatchSize',10, ...
+    'MaxEpochs',6, ...
+    'InitialLearnRate',1e-4, ... % Slow inital learning
+    'Shuffle','every-epoch', ...
+    'ValidationData',augimdsValidation, ...
+    'ValidationFrequency',3, ...
     'Verbose',false, ...
-    'Plots','training-progress',...
-    'MiniBatchSize',3,...
-    'ExecutionEnvironment', 'gpu');
+    'Plots','training-progress');
 
-net = trainNetwork(imdsTrain,layers,options);
+% Train the model
+netTransfer = trainNetwork(augimdsTrain,layers,options);
 
-YPred = classify(net,imdsValidation);
-YValidation = imdsValidation.Labels;
+%% Validate
+YPred = classify(netTransfer,augimdsValidation);
+YValidation = augimdsValidation.Labels;
 accuracy = mean(YPred == YValidation);
-
