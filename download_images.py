@@ -11,13 +11,15 @@ sydney_dl = os.path.join('Images', 'Level_1', 'Downloaded_Sydney')
 paris_dl = os.path.join('Images', 'Level_1', 'Downloaded_Paris')
 
 def download_img(link, filename, filedir):
+    # Download image
     try:
         r = requests.get(link)
     except requests.exceptions.ConnectionError:
         print("Skipping...")
         return
+
     # Write image to file
-    print(f"Writing file {filename}...")
+    print(f"Writing file {filename} from {link}")
     with open(os.path.join(filedir, filename), 'wb') as img:
         img.write(r.content)
 
@@ -48,17 +50,9 @@ if __name__ == "__main__":
             if row[2] == "55350":
 
                 # SYDNEY OPERA HOUSE
-                threading.Thread(
-                    target=download_img, 
-                    args=(row[1], f'{row[0]}.png', sydney_dl,), 
-                    daemon=True
-                ).start()
+                download_img(row[1], f'{row[0]}.jpg', sydney_dl)
 
             elif row[2] == "47378":
                 
                 # EIFFEL TOWER
-                threading.Thread(
-                    target=download_img, 
-                    args=(row[1], f'{row[0]}.png', paris_dl,), 
-                    daemon=True
-                ).start()
+                download_img(row[1], f'{row[0]}.jpg', paris_dl)
