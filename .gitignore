@@ -2,3 +2,5 @@ env
 train.csv
 train_old.csv
 train_label_to_category.csv
+
+Images

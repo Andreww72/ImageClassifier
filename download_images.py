@@ -1,6 +1,7 @@
 import csv
 import os
 import threading
+import random
 
 import requests
 
@@ -9,6 +10,7 @@ et_id = "47378"
 
 sydney_dl = os.path.join('Images', 'Level_1', 'Downloaded_Sydney')
 paris_dl = os.path.join('Images', 'Level_1', 'Downloaded_Paris')
+other_dl = os.path.join('Images', 'Level_1', 'Downloaded_Other')
 
 def download_img(link, filename, filedir):
     # Download image
@@ -42,17 +44,32 @@ if __name__ == "__main__":
         os.makedirs(sydney_dl)
     if not os.path.exists(paris_dl):
         os.makedirs(paris_dl)
+    if not os.path.exists(other_dl):
+        os.makedirs(other_dl)
     
+    other_images = []
+
     # Cycle through training dataset and get images
     with open('train.csv', newline='') as csvfile:
         csvreader = csv.reader(csvfile)
+
         for row in csvreader:
             if row[2] == "55350":
-
                 # SYDNEY OPERA HOUSE
                 download_img(row[1], f'{row[0]}.jpg', sydney_dl)
 
             elif row[2] == "47378":
-                
                 # EIFFEL TOWER
                 download_img(row[1], f'{row[0]}.jpg', paris_dl)
+            
+            else:
+                other_images.append(row)
+
+    random.seed()
+    random_choices = random.sample(other_images, 400)
+
+    for row in random_choices:
+        # Don't download if its a Opera House or Eiffel Tower image
+        if row[2] not in ("55350", "47378"):
+            download_img(row[1], f'{row[0]}.jpg', other_dl)
+            
