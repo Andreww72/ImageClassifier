@@ -2,20 +2,20 @@
 
 ## Image download and convert scripts
 
-To setup the Python environment:
+To setup the Python environment, run the following from the root of the project:
 
 ```
 python3 -m venv env
 source env/bin/activate
-pip install -r requirements.txt
+pip install -r utilities/requirements.txt
 ```
 
 To download external images of sydney and paris, and then get the 'other' images (images require manual sorting after this process):
 ```
-python download_images.py
+python utilities/download_images.py
 ```
 
 To convert jpgs to png once downloaded and sorted:
 ```
-python convert_images.py <root_directory>
+python utilities/convert_images.py <root_image_directory>
 ```
