@@ -19,3 +19,12 @@ To convert jpgs to png once downloaded and sorted:
 ```
 python utilities/convert_images.py <root_image_directory>
 ```
+
+To build the level 2 dataset from the downloaded images:
+```
+python utilities/rotate_images.py <source_image_root_dir> <output_image_root_dir>
+
+e.g.
+
+python utilities/rotate_images.py Images/Collected/Level1 Images/Collected/Level2
+```
