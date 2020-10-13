@@ -28,26 +28,32 @@ if __name__ == "__main__":
             name, ext = os.path.splitext(f)
             if ext == ".png":
                 angle = random.uniform(-180,180)
+                pad_img = random.random() >= 0.5
+
                 img = cv2.imread(filepath)
                 try:
                     rows, cols, _ = img.shape
                 except AttributeError:
                     print(f"{subdir}/{f} seems to be broken, skipping...")
                     continue
-                    
-                # make new image size
-                r = np.deg2rad(angle)
-                x, y = (abs(np.sin(r)*rows) + abs(np.cos(r)*cols),abs(np.sin(r)*cols) + abs(np.cos(r)*rows))
+                
+                if pad_img:
+                    # make new image size
+                    r = np.deg2rad(angle)
+                    x, y = (abs(np.sin(r)*rows) + abs(np.cos(r)*cols),abs(np.sin(r)*cols) + abs(np.cos(r)*rows))
+                else:
+                    x, y = cols, rows
                 
                 print(f"Rotating {f} {angle} degrees...")
 
                 # Get rotation matrix
                 M = cv2.getRotationMatrix2D((cols/2,rows/2), angle, 1)
 
-                # Adjust translation or whatever
-                (tx,ty) = ((x-cols)/2, (y-rows)/2)
-                M[0,2] += tx
-                M[1,2] += ty
+                if pad_img:
+                    # Adjust translation or whatever
+                    (tx,ty) = ((x-cols)/2, (y-rows)/2)
+                    M[0,2] += tx
+                    M[1,2] += ty
 
                 # Rotate the image
                 dst = cv2.warpAffine(img, M, (int(x),int(y)))
