@@ -2,8 +2,8 @@ import os
 import pathlib
 import sys
 import random
-import numpy as np
 
+import numpy as np
 import cv2
 
 if __name__ == "__main__":
