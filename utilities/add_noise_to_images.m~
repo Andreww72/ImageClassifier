@@ -14,9 +14,8 @@ if ~exist(output_dir, 'dir')
 end
 
 % Cycle through directories and do this stuff
-
+D = dir(input_dir);
 cd(input_dir);
-D = dir;
 for k = 3:length(D)
     currD = D(k).name;
     disp(currD)
@@ -35,8 +34,8 @@ for k = 3:length(D)
             sigma = rand * 0.15 + 0.05; % idk
             g = imnoise(image, 'gaussian', mu, sigma);
         else
-            density = rand * 0.3 + 0.1; % Randomly grab salt and pepper density
-            g = imnoise(image, 'salt & pepper', density);
+            D = rand * 0.25 + 0.05; % Randomly grab salt and pepper density
+            g = imnoise(image, 'salt & pepper', D);
         end
         
         if ~exist(fullfile(root_dir, output_dir, currD), 'dir')
@@ -57,6 +56,3 @@ for k = 3:length(D)
     
     cd(fullfile(root_dir, input_dir))
 end
-
-cd(root_dir);
-disp("Done!");

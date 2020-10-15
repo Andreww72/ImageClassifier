@@ -3,7 +3,7 @@ import os
 import threading
 import time
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 def convert_image(input_file):
     '''
@@ -12,8 +12,11 @@ def convert_image(input_file):
     name, ext = os.path.splitext(f)
     location, filename = os.path.split(input_file)
     print("Converting {} to {}".format(input_file, os.path.join(location, "{}.png".format(name))))
-    im = Image.open(input_file)
-    im.convert('RGB').save(os.path.join(location, "{}.png".format(name)))
+    try:
+        im = Image.open(input_file)
+        im.convert('RGB').save(os.path.join(location, "{}.png".format(name)))
+    except (OSError, UnidentifiedImageError) as e:
+        print("{} failed, skipping and deleting...".format(input_file))
     
     # delete old image
     os.remove(input_file)
