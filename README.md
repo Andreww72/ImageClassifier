@@ -28,3 +28,7 @@ e.g.
 
 python utilities/rotate_images.py Images/Collected/Level1 Images/Collected/Level2
 ```
+
+To build the level 3 non-rotated dataset from the downloaded images, open up add_noise_to_images.m in MATLAB and run the script, ensuring the correct filepaths are provided.
+
+To build the level 3 rotated dataset, call `utilities/rotate_images.py` as before, providing `Images/Collected/Level3` as both the input and output directory.
