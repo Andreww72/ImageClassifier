@@ -6,3 +6,4 @@ opencv-python==4.4.0.44
 Pillow==7.2.0
 requests==2.24.0
 urllib3==1.25.10
+Wand==0.6.3
