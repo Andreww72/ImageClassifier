@@ -1,59 +1,103 @@
+%% AlexNet
+% https://au.mathworks.com/help/deeplearning/ref/alexnet.html
+% https://au.mathworks.com/help/deeplearning/ug/train-deep-learning-network-to-classify-new-images.html
+
 %% Setup
-image_directory = "../EGH444_Project_2020_TrainingData/";
-
-%% Transfer learning
-net = alexnet; % Get Alexnet
-inputSize = net.Layers(1).InputSize;
-layersTransfer = net.Layers(1:end-3); % Use all trained layers except last 3
-
-% Setup latyers
-numClasses = numel(categories(imdsTrain.Labels));
-layers = [
-    layersTransfer % Transfer learning
-    fullyConnectedLayer(numClasses,'WeightLearnRateFactor',20,'BiasLearnRateFactor',20)
-    softmaxLayer
-    classificationLayer];
-
-%% Develop the model
+image_directory = "../Images/";
 imds = imageDatastore(image_directory, ...
     'IncludeSubfolders',true, ...
     'LabelSource','foldernames');
+imds.ReadSize = numpartitions(imds);
+imds.ReadFcn = @(loc)imresize(imread(loc),[300,300]);
+imds.ReadSize = numpartitions(imds);
 
 % Split into training and validation 70-30
-[imdsTrain,imdsValidation] = splitEachLabel(imds,0.7,'randomized');
+[imdsTrain,imdsValidation] = splitEachLabel(imds,0.7);
+numClasses = numel(categories(imdsTrain.Labels));
 
-% The Alexnet (pretrained) requires input images of size 227-by-227-by-3
-% Consequently, we have to resize to these deminisions. 
-% Additionally, apply data augmentation ot randomly flip the training 
-% images along the vertical axis, and randomly translate them up to 30 
-% pixels horizontally and vertically.
+%% Transfer learning
+net = alexnet;
+analyzeNetwork(net)
+net.Layers(1)
+inputSize = net.Layers(1).InputSize;
+
+% Replace final layers
+if isa(net,'SeriesNetwork') 
+  lgraph = layerGraph(net.Layers); 
+else
+  lgraph = layerGraph(net);
+end
+[learnableLayer,classLayer] = findLayersToReplace(lgraph);
+
+if isa(learnableLayer,'nnet.cnn.layer.FullyConnectedLayer')
+    newLearnableLayer = fullyConnectedLayer(numClasses, ...
+        'Name','new_fc', ...
+        'WeightLearnRateFactor',10, ...
+        'BiasLearnRateFactor',10);
+    
+elseif isa(learnableLayer,'nnet.cnn.layer.Convolution2DLayer')
+    newLearnableLayer = convolution2dLayer(1,numClasses, ...
+        'Name','new_conv', ...
+        'WeightLearnRateFactor',10, ...
+        'BiasLearnRateFactor',10);
+end
+
+lgraph = replaceLayer(lgraph,learnableLayer.Name,newLearnableLayer);
+
+newClassLayer = classificationLayer('Name','new_classoutput');
+lgraph = replaceLayer(lgraph,classLayer.Name,newClassLayer);
+
+% Check network reconstructed correctly
+figure('Units','normalized','Position',[0.3 0.3 0.4 0.4]);
+plot(lgraph)
+ylim([0,10])
+
+% Important variables
+layers = lgraph.Layers;
+connections = lgraph.Connections;
+
+% Alexnet to short to bother freezing layers
+
+%% Train network
 pixelRange = [-30 30];
+scaleRange = [0.9 1.1];
 imageAugmenter = imageDataAugmenter( ...
     'RandXReflection',true, ...
     'RandXTranslation',pixelRange, ...
-    'RandYTranslation',pixelRange);
-augimdsTrain = augmentedImageDatastore(inputSize(1:2),imdsTrain, ...
+    'RandYTranslation',pixelRange, ...
+    'RandXScale',scaleRange, ...
+    'RandYScale',scaleRange);
+
+augimdsTrain = augmentedImageDatastore(inputSize(1:2), imdsTrain, ...
     'DataAugmentation',imageAugmenter);
 
-% Automatically resize the validation images without performing further data
-% augmentation 
 augimdsValidation = augmentedImageDatastore(inputSize(1:2),imdsValidation);
 
+miniBatchSize = 10;
+valFrequency = floor(numel(augimdsTrain.Files)/miniBatchSize);
 options = trainingOptions('sgdm', ...
-    'MiniBatchSize',10, ...
+    'MiniBatchSize',miniBatchSize, ...
     'MaxEpochs',6, ...
-    'InitialLearnRate',1e-4, ... % Slow inital learning
+    'InitialLearnRate',3e-4, ...
     'Shuffle','every-epoch', ...
     'ValidationData',augimdsValidation, ...
-    'ValidationFrequency',3, ...
+    'ValidationFrequency',valFrequency, ...
     'Verbose',false, ...
-    'Plots','training-progress',...
+    'Plots','training-progress', ...
     'ExecutionEnvironment','gpu');
 
-% Train the model
-netTransfer = trainNetwork(augimdsTrain,layers,options);
+net = trainNetwork(augimdsTrain,lgraph,options);
 
-%% Validate
-YPred = classify(netTransfer,augimdsValidation);
-YValidation = augimdsValidation.Labels;
-accuracy = mean(YPred == YValidation);
+%% Classify validation images
+[YPred,probs] = classify(net,augimdsValidation);
+accuracy = mean(YPred == imdsValidation.Labels)
+
+idx = randperm(numel(imdsValidation.Files),4);
+figure
+for i = 1:4
+    subplot(2,2,i)
+    I = readimage(imdsValidation,idx(i));
+    imshow(I)
+    label = YPred(idx(i));
+    title(string(label) + ", " + num2str(100*max(probs(idx(i),:)),3) + "%");
+end
