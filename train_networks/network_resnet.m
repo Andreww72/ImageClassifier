@@ -2,8 +2,13 @@
 % https://au.mathworks.com/help/deeplearning/ref/resnet18.html
 % https://au.mathworks.com/help/deeplearning/ug/train-deep-learning-network-to-classify-new-images.html
 
+close all;
+clear;
+clc;
+
 %% Setup
-image_directory = "../Images/";
+% Leave provided images as a test set
+image_directory = "../Images/Collected/";
 imds = imageDatastore(image_directory, ...
     'IncludeSubfolders',true, ...
     'LabelSource','foldernames');
@@ -17,7 +22,7 @@ numClasses = numel(categories(imdsTrain.Labels));
 
 %% Transfer learning
 net = resnet18;
-analyzeNetwork(net)
+%analyzeNetwork(net)
 net.Layers(1)
 inputSize = net.Layers(1).InputSize;
 
@@ -75,7 +80,7 @@ augimdsTrain = augmentedImageDatastore(inputSize(1:2), imdsTrain, ...
 
 augimdsValidation = augmentedImageDatastore(inputSize(1:2),imdsValidation);
 
-miniBatchSize = 10;
+miniBatchSize = 64;
 valFrequency = floor(numel(augimdsTrain.Files)/miniBatchSize);
 options = trainingOptions('sgdm', ...
     'MiniBatchSize',miniBatchSize, ...
@@ -93,13 +98,3 @@ net = trainNetwork(augimdsTrain,lgraph,options);
 %% Classify validation images
 [YPred,probs] = classify(net,augimdsValidation);
 accuracy = mean(YPred == imdsValidation.Labels)
-
-idx = randperm(numel(imdsValidation.Files),4);
-figure
-for i = 1:4
-    subplot(2,2,i)
-    I = readimage(imdsValidation,idx(i));
-    imshow(I)
-    label = YPred(idx(i));
-    title(string(label) + ", " + num2str(100*max(probs(idx(i),:)),3) + "%");
-end
