@@ -1,11 +1,11 @@
 function landmark = detect_landmark(img)
     % ResNet: 224, AlexNet: 227, VGG: 224
-    im_width = 224;
-    im_height = 224;
+    im_width = 227;
+    im_height = 227;
     
     persistent net_g7
     if isempty(net_g7)
-        load saved_networks\resnet18_e6.mat net_g7
+        load saved_networks\alexnet_e3.mat net_g7
     end
     
     R = img(:, :, 1);

@@ -1,5 +1,5 @@
-%% VGG-16
-% https://au.mathworks.com/help/deeplearning/ref/vgg16.html
+%% Inception-v3
+% https://au.mathworks.com/help/deeplearning/ref/inceptionv3.html
 % https://au.mathworks.com/help/deeplearning/ug/train-deep-learning-network-to-classify-new-images.html
 
 close all;
@@ -21,7 +21,7 @@ imds.ReadSize = numpartitions(imds);
 numClasses = numel(categories(imdsTrain.Labels));
 
 %% Transfer learning
-net_g7 = vgg16;
+net_g7 = mobilenetv2;
 %analyzeNetwork(net)
 net_g7.Layers(1)
 inputSize = net_g7.Layers(1).InputSize;
@@ -62,7 +62,7 @@ layers = lgraph.Layers;
 connections = lgraph.Connections;
 
 % Freeze initial layers (layers in initial stem)
-layers(1:4) = freezeWeights(layers(1:4));
+layers(1:17) = freezeWeights(layers(1:17));
 lgraph = createLgraphUsingConnections(layers,connections);
 
 %% Train network
