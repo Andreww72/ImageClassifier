@@ -1,23 +1,24 @@
 function landmark = detect_landmark(img)
+    % ResNet: 224, AlexNet: 227, VGG: 224
     im_width = 224;
     im_height = 224;
     
-    persistent net
-    if isempty(net)
-        load resnet18_e6.mat net
+    persistent net_g7
+    if isempty(net_g7)
+        load saved_networks\resnet18_e6.mat net_g7
     end
     
-    R = img(:,:,1);
-    G = img(:,:,2);
-    B = img(:,:,3);
+    R = img(:, :, 1);
+    G = img(:, :, 2);
+    B = img(:, :, 3);
     
-    Rr = imresize(R,[im_width,im_height]);
-    Gr = imresize(G,[im_width,im_height]);
-    Br = imresize(B,[im_width,im_height]);
+    Rr = imresize(R,[im_width, im_height]);
+    Gr = imresize(G,[im_width, im_height]);
+    Br = imresize(B,[im_width, im_height]);
     
     img_resized = cat(3, Rr, Gr, Br);
     
-    [~, scores] = classify(net, img_resized);
+    [~, scores] = classify(net_g7, img_resized);
     
     [~, idx] = max(scores);
     

@@ -21,16 +21,16 @@ imds.ReadSize = numpartitions(imds);
 numClasses = numel(categories(imdsTrain.Labels));
 
 %% Transfer learning
-net = vgg16;
+net_g7 = vgg16;
 %analyzeNetwork(net)
-net.Layers(1)
-inputSize = net.Layers(1).InputSize;
+net_g7.Layers(1)
+inputSize = net_g7.Layers(1).InputSize;
 
 % Replace final layers
-if isa(net,'SeriesNetwork') 
-  lgraph = layerGraph(net.Layers); 
+if isa(net_g7,'SeriesNetwork') 
+  lgraph = layerGraph(net_g7.Layers); 
 else
-  lgraph = layerGraph(net);
+  lgraph = layerGraph(net_g7);
 end
 [learnableLayer,classLayer] = findLayersToReplace(lgraph);
 
@@ -93,8 +93,8 @@ options = trainingOptions('sgdm', ...
     'Plots','training-progress', ...
     'ExecutionEnvironment','gpu');
 
-net = trainNetwork(augimdsTrain,lgraph,options);
+net_g7 = trainNetwork(augimdsTrain,lgraph,options);
 
 %% Classify validation images
-[YPred,probs] = classify(net,augimdsValidation);
+[YPred,probs] = classify(net_g7,augimdsValidation);
 accuracy = mean(YPred == imdsValidation.Labels)

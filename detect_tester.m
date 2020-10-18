@@ -7,11 +7,11 @@ expected = [];
 for i = 1 : length(filelist)
     
     if contains(filelist(i).folder, 'Other')
-        expected = [expected 1];
+        expected = [expected 0];
     elseif contains(filelist(i).folder, 'Paris')
         expected = [expected 2];
     else
-        expected = [expected 3];
+        expected = [expected 1];
     end
     
     filename = strcat(filelist(i).folder, '\', filelist(i).name);
@@ -20,8 +20,9 @@ for i = 1 : length(filelist)
     % Classify test
     output = detect_landmark(img);
     results = [results output];
-        
+    
 end
 
 diff_test = expected - results;
-acc_test = sum(diff_test == 0) / size(results);
+acc_test = sum(diff_test == 0) / size(results, 2);
+disp(acc_test);
