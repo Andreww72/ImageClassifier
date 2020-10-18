@@ -22,7 +22,7 @@ numClasses = numel(categories(imdsTrain.Labels));
 
 %% Transfer learning
 net_g7 = inceptionv3;
-analyzeNetwork(net_g7)
+%analyzeNetwork(net_g7)
 net_g7.Layers(1)
 inputSize = net_g7.Layers(1).InputSize;
 
