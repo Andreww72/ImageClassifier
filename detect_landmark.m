@@ -2,7 +2,10 @@ function landmark = detect_landmark(img)
     im_width = 224;
     im_height = 224;
     
-    load resnet50_11-11-20.mat net
+    persistent net
+    if isempty(net)
+        load resnet18_e6.mat net
+    end
     
     R = img(:,:,1);
     G = img(:,:,2);
