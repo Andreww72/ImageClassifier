@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3c8467db-f0e2-4cf2-97a7-d0dea9882752" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/train_networks/network_mobilenet.m" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/train_networks/screenshots/alexnet_e3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/train_networks/screenshots/inceptionv2_e3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/train_networks/screenshots/resnet-18_e2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/train_networks/screenshots/vgg-16_e5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/detect_landmark.m" beforeDir="false" afterPath="$PROJECT_DIR$/detect_landmark.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/detect_tester.m" beforeDir="false" afterPath="$PROJECT_DIR$/detect_tester.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/network_alexnet.m" beforeDir="false" afterPath="$PROJECT_DIR$/train_networks/network_alexnet.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/network_inception.m" beforeDir="false" afterPath="$PROJECT_DIR$/train_networks/network_inception.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/network_resnet.m" beforeDir="false" afterPath="$PROJECT_DIR$/train_networks/network_resnet.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/network_vgg.m" beforeDir="false" afterPath="$PROJECT_DIR$/train_networks/network_vgg.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/screenshots/alexnet1_e6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/screenshots/alexnet1_e6_confusion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/screenshots/alexnet2_e6.png" beforeDir="false" afterPath="$PROJECT_DIR$/train_networks/screenshots/alexnet_e6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/screenshots/alexnet2_e6_confusion.png" beforeDir="false" afterPath="$PROJECT_DIR$/train_networks/screenshots/alexnet_e6_confusion.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_networks/screenshots/vgg-16_e6.png" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1j2gMkHacORvgTyLdPzlyhdYEMt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3c8467db-f0e2-4cf2-97a7-d0dea9882752" name="Default Changelist" comment="" />
+      <created>1603007555648</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603007555648</updated>
+    </task>
+    <servers />
+  </component>
+</project>

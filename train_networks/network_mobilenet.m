@@ -1,5 +1,5 @@
-%% Inception-v3
-% https://au.mathworks.com/help/deeplearning/ref/inceptionv3.html
+%% MobileNetV2
+% https://au.mathworks.com/help/deeplearning/ref/mobilenetv2.html
 % https://au.mathworks.com/help/deeplearning/ug/train-deep-learning-network-to-classify-new-images.html
 
 close all;
@@ -22,7 +22,7 @@ numClasses = numel(categories(imdsTrain.Labels));
 
 %% Transfer learning
 net_g7 = mobilenetv2;
-%analyzeNetwork(net)
+%analyzeNetwork(net_g7)
 net_g7.Layers(1)
 inputSize = net_g7.Layers(1).InputSize;
 
@@ -62,7 +62,7 @@ layers = lgraph.Layers;
 connections = lgraph.Connections;
 
 % Freeze initial layers (layers in initial stem)
-layers(1:17) = freezeWeights(layers(1:17));
+layers(1:16) = freezeWeights(layers(1:16));
 lgraph = createLgraphUsingConnections(layers,connections);
 
 %% Train network
@@ -84,7 +84,7 @@ miniBatchSize = 64;
 valFrequency = floor(numel(augimdsTrain.Files)/miniBatchSize);
 options = trainingOptions('sgdm', ...
     'MiniBatchSize',miniBatchSize, ...
-    'MaxEpochs',3, ...
+    'MaxEpochs',4, ...
     'InitialLearnRate',3e-4, ...
     'Shuffle','every-epoch', ...
     'ValidationData',augimdsValidation, ...
