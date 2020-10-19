@@ -1,20 +1,31 @@
 function landmark = detect_landmark(img)
     %%% img input MUST be .png format %%%
-    im_size = 224; % ResNet, MobileNet
+    %im_size = 224; % ResNet, MobileNet, VGG
     %im_size = 227; % AlexNet
-    %im_size = 299; % Inception
+    im_size = 299; % Inception
     
     persistent net_g7
     if isempty(net_g7)
+        %load saved_networks\alexnet_e1.mat net_g7
+        %load saved_networks\resnet18_e1.mat net_g7
+        %load saved_networks\mobilenetv2_e1.mat net_g7
+        load saved_networks\inceptionv2_e1.mat net_g7
+        
         %load saved_networks\alexnet_e3.mat net_g7
         %load saved_networks\resnet18_e3.mat net_g7
         %load saved_networks\inceptionv2_e3.mat net_g7
         %load saved_networks\mobilenetv2_e3.mat net_g7
-        
+
         %load saved_networks\alexnet_e4.mat net_g7
         %load saved_networks\resnet18_e4.mat net_g7
         %load saved_networks\inceptionv2_e4.mat net_g7
-        load saved_networks\mobilenetv2_e4.mat net_g7
+        %load saved_networks\mobilenetv2_e4.mat net_g7
+        %load saved_networks\vgg16_e4.mat net_g7
+        
+        %load saved_networks\alexnet_e6.mat net_g7
+        %load saved_networks\resnet18_e6.mat net_g7
+        %load saved_networks\inceptionv2_e6.mat net_g7
+        %load saved_networks\mobilenetv2_e6.mat net_g7
     end
     
     R = img(:, :, 1);

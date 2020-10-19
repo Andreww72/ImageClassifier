@@ -20,7 +20,6 @@ for i = 1 : length(filelist)
     % Classify test
     output = detect_landmark(img);
     results = [results output];
-    
 end
 
 diff_test = expected - results;
