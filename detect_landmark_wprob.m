@@ -1,15 +1,15 @@
-function landmark = detect_landmark(img)
+function [landmark, scores] = detect_landmark_wprob(img)
     %%% img input MUST be .png format %%%
     % 224 -> ResNet, MobileNet, VGG, 227 -> AlexNet, 299 -> Inception
-    im_size = 227;
+    im_size = 224;
     
     persistent net_g7
     if isempty(net_g7)
-        load saved_networks\alexnet_e6.mat net_g7
+        %load saved_networks\alexnet_e6.mat net_g7
         %load saved_networks\resnet18_e6.mat net_g7
-        %load saved_networks\inceptionv2_e6.mat net_g7
+        %load saved_networks\inceptionv3_e6.mat net_g7
         %load saved_networks\mobilenetv2_e6.mat net_g7
-        %load saved_networks\vgg16_e6.mat net_g7
+        load saved_networks\vgg16_e6.mat net_g7
     end
     
     R = img(:, :, 1);

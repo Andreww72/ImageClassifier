@@ -2,11 +2,12 @@ close all;
 clear;
 clc;
 
-rootdir = 'images\test_set1\';
+rootdir = 'images\test_set2\';
 filelist = dir(fullfile(rootdir, '**\*.*')); % Includes subdirectories
 filelist = filelist(~[filelist.isdir]);  % Remove folders
 
 results = [];
+probs = [];
 correctImg = [];
 for i = 1 : length(filelist)
         
@@ -22,8 +23,10 @@ for i = 1 : length(filelist)
     img = imread(filename);
     
     % Classify test
-    output = detect_landmark(img);
-    results = [results output];
+    %landmark= detect_landmark(img);
+    [landmark, prob] = detect_landmark_wprob(img);
+    results = [results landmark];
+    probs = [probs prob];
 end
 
 % Calculate accuracy
@@ -39,28 +42,32 @@ wrongs = wrongs(diff_test ~= 0);
 figure(1);
 actualIndices = find(diff_test);
 for i = 1 : length(wrongs)
-    subplot(4, round(length(wrongs)/4)+1, i);
+    index = actualIndices(i);
+    
+    subplot(4, ceil(length(wrongs)/4), i);
     hold on;
     img = imread(append(rootdir, char(wrongs(i))));
     imshow(img);
     
-    
-    if results(actualIndices(i)) == 0
+    if results(index) == 0
         classifiedAs = 'Other';
-    elseif results(actualIndices(i)) == 1
+    elseif results(index) == 1
         classifiedAs = 'Sydney';
-    elseif results(actualIndices(i)) == 2
+    elseif results(index) == 2
         classifiedAs = 'Paris';
     end
     
-    if correctImg(actualIndices(i)) == 0
+    if correctImg(index) == 0
         shouldHaveBeen = 'Other';
-    elseif correctImg(actualIndices(i)) == 1
+    elseif correctImg(index) == 1
         shouldHaveBeen = 'Sydney';
-    elseif correctImg(actualIndices(i)) == 2
+    elseif correctImg(index) == 2
         shouldHaveBeen = 'Paris';
     end
     
-    title(append(classifiedAs, ' instead of ', shouldHaveBeen));
+    title(classifiedAs +...
+        " (" + num2str(100*probs(3*(index-1)+results(index)), 3) + ...
+        "%) instead of " + shouldHaveBeen + " (" + ...
+        num2str(100*probs(3*(index-1)+correctImg(index)), 3) + "%)");
     hold off;
 end
