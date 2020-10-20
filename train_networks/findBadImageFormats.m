@@ -1,6 +1,6 @@
 % Find bad image formats
 
-image_directory = "../Images/";
+image_directory = "../images/test_set2";
 imds = imageDatastore(image_directory, ...
     'IncludeSubfolders',true, ...
     'LabelSource','foldernames');

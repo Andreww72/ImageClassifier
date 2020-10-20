@@ -1,8 +1,8 @@
 clc; clear all;
 
 % To create noisy rotated images, you have to add noise THEN rotate
-input_dir = "Images/Collected/Level1";
-output_dir = "Images/Collected/Level3";
+input_dir = "../images/test_set2";
+output_dir = "../images/test_set2";
 
 root_dir = pwd;
 
