@@ -65,9 +65,6 @@ for i = 1 : length(wrongs)
         shouldHaveBeen = 'Paris';
     end
     
-    title(classifiedAs +...
-        " (" + num2str(100*probs(3*(index-1)+results(index)), 3) + ...
-        "%) instead of " + shouldHaveBeen + " (" + ...
-        num2str(100*probs(3*(index-1)+correctImg(index)), 3) + "%)");
+    title(classifiedAs + " instead of " + shouldHaveBeen);
     hold off;
 end
