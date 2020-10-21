@@ -1,3 +1,5 @@
+% MATLAB CODE found at:
+% C:\Program Files\MATLAB\R2019b\examples\nnet\main\findLayersToReplace.m
 
 % findLayersToReplace(lgraph) finds the single classification layer and the
 % preceding learnable (fully connected or convolutional) layer of the layer

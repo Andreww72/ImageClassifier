@@ -1,7 +1,9 @@
+% MATLAB CODE found at:
+% C:\Program Files\MATLAB\R2019b\examples\nnet\main\createLgraphUsingConnections.m
+
 % lgraph = createLgraphUsingConnections(layers,connections) creates a layer
 % graph with the layers in the layer array |layers| connected by the
 % connections in |connections|.
-
 function lgraph = createLgraphUsingConnections(layers,connections)
 
 lgraph = layerGraph();
