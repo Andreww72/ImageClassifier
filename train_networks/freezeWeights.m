@@ -1,3 +1,6 @@
+% MATLAB CODE found at:
+% C:\Program Files\MATLAB\R2019b\examples\nnet\main\freezeWeights.m
+
 % layers = freezeWeights(layers) sets the learning rates of all the
 % parameters of the layers in the layer array |layers| to zero.
 
