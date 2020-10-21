@@ -38,3 +38,5 @@ To build the level 3 rotated dataset, call `image_generation/rotate_images.py` a
 ## Running the training scripts
 
 Training executed from `network_inception.m`.
+
+Code can be called by calling `detect_landmark.m`.
