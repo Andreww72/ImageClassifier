@@ -7,7 +7,6 @@ filelist = dir(fullfile(rootdir, '**\*.*')); % Includes subdirectories
 filelist = filelist(~[filelist.isdir]);  % Remove folders
 
 results = [];
-probs = [];
 correctImg = [];
 for i = 1 : length(filelist)
         
@@ -23,10 +22,8 @@ for i = 1 : length(filelist)
     img = imread(filename);
     
     % Classify test
-    %landmark= detect_landmark(img);
-    [landmark, prob] = detect_landmark_wprob(img);
+    landmark= detect_landmark(img);
     results = [results landmark];
-    probs = [probs prob];
 end
 
 % Calculate accuracy
