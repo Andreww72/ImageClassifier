@@ -1,11 +1,13 @@
-function [landmark, scores] = detect_landmark_wprob(img)
+function landmark = detect_landmark(img)
     %%% img input MUST be .png format %%%
+    assert(size(img,3) == 3, "Image must be RGB");
+    
     % 224 -> ResNet, MobileNet, VGG, 227 -> AlexNet, 299 -> Inception
     im_size = 299;
     
     persistent net_g7
     if isempty(net_g7)
-        load saved_networks\inceptionONLY.mat net_g7
+        load inceptionv3_e6_net.mat net_g7
     end
     
     R = img(:, :, 1);

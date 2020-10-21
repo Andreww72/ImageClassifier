@@ -5,3 +5,4 @@ train_label_to_category.csv
 Images
 saved_networks/
 *.mat
+.idea
